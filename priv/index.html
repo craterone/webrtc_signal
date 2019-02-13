@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+<script type="text/javascript">
+
+  let ws;
+  async function main() {
+    const urlObject = new URL(document.location.href);
+    const room = urlObject.searchParams.get("room");
+
+    const wsUrl = 'wss://' + window.location.host + '/websocket/' + room;
+    ws = new WebSocket(wsUrl);
+    ws.onopen = _=>{
+      console.log('open');
+      ws.sendJ({
+        event:'authenticate',
+        data:{
+          username:'u',
+          password:'p',
+        }
+      });
+    };
+
+    ws.onclose = _=>{
+      console.log('close');
+    };
+
+    ws.onmessage = event=>{
+      console.log(event.data);
+    }
+
+    ws.sendJ = data=>{
+      ws.send(JSON.stringify(data))
+    }
+  }
+
+  main();
+</script>
+</body>
+</html>
