@@ -20,7 +20,7 @@ start(_StartType, _StartArgs) ->
           {'_', cowboy_static, {priv_file, webrtc_signal, "index.html"}}
         ]}
       ]),
-    {ok, _} = cowboy:start_clear(http, [{port, 8080}], 
+    {ok, _} = cowboy:start_clear(http, [{port, config(port)}], 
       #{ env => #{dispatch => Dispatch}}),
     webrtc_signal_sup:start_link().
 
@@ -31,3 +31,8 @@ stop(_State) ->
 %%====================================================================
 %% Internal functions
 %%====================================================================
+
+config(Key) ->
+  {ok, Value} = application:get_env(webrtc_signal,Key),
+  Value.
+
